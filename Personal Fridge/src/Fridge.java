@@ -53,15 +53,21 @@ public class Fridge {
 	}
 
 	public String itemSearch(String itemName) {
-		// User enters item to search, returns item and quantity found. If there is no
-		// item found, returns "Item not found"
+		// User enters item to search, returns item and quantity found
 		
 		Item item = getItemFromName(itemName);
-		if(item.equals(null)) {
-			return "Item not found";
+		if(item == null) {
+			// See if there are items with similar names to what the user entered
+			String similarItems = similarItemsFromNameToString(itemName);
+			if(similarItems.isEmpty()) {
+				return "There are no " + itemName + " in your fridge.";
+			}
+			else {
+				return "There are no " + itemName + " in your fridge. \n" + similarItems;
+			}
 		}
 		else {
-			return "Found: " + item.name + " , quantity: " + item.quantity;
+			return "Found " + item.quantity + " " + item.name + " in your fridge.";
 		}
 	}
 

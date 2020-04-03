@@ -15,7 +15,7 @@ public class UseFridge {
 		
 		boolean usingFridge = true;
 		while (usingFridge) {
-			System.out.println("Would you like to add (to), remove (from), review your fridge, or quit?");
+			System.out.println("Would you like to add (to), remove (from), review your fridge, find (an item), or quit?");
 			String userRequest = console.nextLine();
 
 			// Add an item to the fridge
@@ -42,6 +42,11 @@ public class UseFridge {
 			// Review the items in the fridge
 			} else if (userRequest.contains("review")) {
 				System.out.println(fridge.review());
+				
+			} else if (userRequest.contains("find")) {
+				System.out.println("Enter the name of the food you want to find in your fridge:");
+				String foodToFind = console.nextLine();
+				System.out.println(fridge.itemSearch(foodToFind));
 			// Quit the program and write to the Fridge.txt file
 			} else if (userRequest.equals("quit")) {
 				usingFridge = false;
