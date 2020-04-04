@@ -50,17 +50,21 @@ public class UseFridge {
 			} else if (userRequest.contains("review")) {
 				System.out.println(fridge.review());
 				
+			// Find an items from a name or a category
 			} else if (userRequest.contains("find")) {
 				System.out.println("Do you want to search for a category or the name of a food?");
 				String request = console.nextLine();
+				// If the user requests to search for items in a category
 				if(request.contains("category")) {
 					System.out.println("Enter the name of the category you want to search for:");
 					String category = console.nextLine();
 					System.out.println(fridge.categorySearchToString(category));
+				// If the user requests to search for items by name
 				} else if(request.contains("name") || request.contains("food")) {
 					System.out.println("Enter the name of the food you want to find in your fridge:");
 					String foodToFind = console.nextLine();
 					System.out.println(fridge.itemSearch(foodToFind));
+				// If the command is unrecognizable, let the user know
 				} else {
 					System.out.println("Unable to understand that command. Please read the questions carefully.");
 				}
@@ -69,6 +73,7 @@ public class UseFridge {
 			} else if (userRequest.equals("quit")) {
 				usingFridge = false;
 				fridge.updateFile();
+			// If the command is unrecognizable, let the user know
 			} else {
 				System.out.println("Unable to understand that command. Please read the questions carefully.");
 			}

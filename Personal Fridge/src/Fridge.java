@@ -9,7 +9,7 @@ public class Fridge {
 	ArrayList<Item> myFridge;
 	
 	public Fridge() throws FileNotFoundException {
-		// Initialize the arrayList with the items in Fridge.txt
+		// Initialize the fridge ArrayList with the items in Fridge.txt
 		myFridge = new ArrayList<Item>();
 		FileReader fridgeReader = new FileReader("Fridge.txt");
 		Scanner fridgeScanner = new Scanner(fridgeReader);
@@ -21,6 +21,7 @@ public class Fridge {
 	}
 
 	public void addItem(String itemName, int quantity, String category) {
+		// See if the item is already in the fridge
 		if (myFridge.contains(itemName)) {
 			getItemFromName(itemName).addToQuantity(quantity);
 		} else {
@@ -31,12 +32,13 @@ public class Fridge {
 
 	public void removeItem(String itemName, int quantity) {
 		Item item = getItemFromName(itemName);
+		// If the item doesn't exist in the fridge, it can't be removed
 		if(item == null) {
 			System.out.println("You don't have any " + itemName + " in your fridge.");
 			System.out.println(similarItemsFromNameToString(itemName));
 			return;
 		}
-		
+		// Let the user know if they just used up their item
 		if(item.quantity - quantity == 0) {
 			myFridge.remove(getItemIndexFromName(itemName));
 			System.out.println("Removed " + quantity + " " + itemName + " from your fridge.");
@@ -46,14 +48,15 @@ public class Fridge {
 			getItemFromName(itemName).subtractFromQuantity(quantity);
 			System.out.println("Removed " + quantity + " " + itemName + " from your fridge.");
 		}
+		// Let the user know if less of the item exists than the requested amount to remove
 		else {
 			System.out.println("You only have " + item.quantity + " " + item.name + " in your fridge.");
 		}
 		
 	}
-
+	
+	// User enters item to search, returns item and quantity found
 	public String itemSearch(String itemName) {
-		// User enters item to search, returns item and quantity found
 		
 		Item item = getItemFromName(itemName);
 		if(item == null) {
@@ -71,6 +74,18 @@ public class Fridge {
 		}
 	}
 	
+	// Searches fridge for items in a given category
+	public ArrayList<Item> categorySearch(String requestedCategory) {
+		ArrayList<Item> returnedList = new ArrayList<Item>();
+		for(Item item : myFridge) {
+			if(item.category.equals(requestedCategory)) {
+				returnedList.add(item);
+			}
+		}
+		return returnedList;
+	}
+	
+	// toString() method of for the categorySearch() method. Returns a printable String
 	public String categorySearchToString(String category) {
 		ArrayList<Item> foodsFound = categorySearch(category);
 		String returnedStr = "";
@@ -83,17 +98,8 @@ public class Fridge {
 		// Return the string without the last comma and space after the last item
 		return returnedStr.substring(0, returnedStr.length() - 2);
 	}
-	
-	public ArrayList<Item> categorySearch(String requestedCategory) {
-		ArrayList<Item> returnedList = new ArrayList<Item>();
-		for(Item item : myFridge) {
-			if(item.category.equals(requestedCategory)) {
-				returnedList.add(item);
-			}
-		}
-		return returnedList;
-	}
 
+	// Lists all items and their quantites in the fridge
 	public String review() {
 		if(myFridge.isEmpty()) {
 			return "Your fridge is empty.";
@@ -138,9 +144,9 @@ public class Fridge {
 	}
 	
 	private Item getItemFromName(String name) {
-		for(int index = 0; index < myFridge.size(); index++) {
-			if(myFridge.get(index).name.equals(name)) {
-				return myFridge.get(index);
+		for(Item item : myFridge) {
+			if(item.name.equals(name)) {
+				return item;
 			}
 		}
 		return null;
@@ -155,11 +161,11 @@ public class Fridge {
 		return -1;
 	}
 	
+	// Writes item information from the fridge ArrayList to the file Fridge.txt
 	public void updateFile() throws FileNotFoundException {
 		PrintStream fridgeWriter = new PrintStream("Fridge.txt");
-		for(int item = 0; item < this.myFridge.size(); item++) {
-			Item fridgeItem = this.myFridge.get(item);
-			fridgeWriter.println(fridgeItem.category + ": " + fridgeItem.name + ": " + fridgeItem.quantity);
+		for(Item item : myFridge) {
+			fridgeWriter.println(item.category + ": " + item.name + ": " + item.quantity);
 		}
 	}
 }
