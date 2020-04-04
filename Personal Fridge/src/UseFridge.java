@@ -15,7 +15,7 @@ public class UseFridge {
 		
 		boolean usingFridge = true;
 		while (usingFridge) {
-			System.out.println("Would you like to add (to), remove (from), review your fridge, find (an item), or quit?");
+			System.out.println("Would you like to add (to), remove (from), review your fridge, find (items), or quit?");
 			String userRequest = console.nextLine();
 
 			// Add an item to the fridge
@@ -24,10 +24,17 @@ public class UseFridge {
 				String food = console.nextLine();
 				System.out.println("Enter the quantity:");
 				int foodQuantity = console.nextInt();
-				
+				// Remove an excess line in the console
 				console.nextLine();
-
-				fridge.addItem(food, foodQuantity);
+				
+				// If the food is not already in the fridge, ask for the category
+				String category = "none";
+				if(fridge.itemSearch(food).contains("no")) {
+					System.out.println("Enter a category you want this food to be in (e.g. meat), or type \"none\":");
+					category = console.nextLine();
+				}
+				
+				fridge.addItem(food, foodQuantity, category);
 				
 			// Remove an item from the fridge
 			} else if (userRequest.contains("remove")) {
@@ -44,13 +51,26 @@ public class UseFridge {
 				System.out.println(fridge.review());
 				
 			} else if (userRequest.contains("find")) {
-				System.out.println("Enter the name of the food you want to find in your fridge:");
-				String foodToFind = console.nextLine();
-				System.out.println(fridge.itemSearch(foodToFind));
+				System.out.println("Do you want to search for a category or the name of a food?");
+				String request = console.nextLine();
+				if(request.contains("category")) {
+					System.out.println("Enter the name of the category you want to search for:");
+					String category = console.nextLine();
+					System.out.println(fridge.categorySearchToString(category));
+				} else if(request.contains("name") || request.contains("food")) {
+					System.out.println("Enter the name of the food you want to find in your fridge:");
+					String foodToFind = console.nextLine();
+					System.out.println(fridge.itemSearch(foodToFind));
+				} else {
+					System.out.println("Unable to understand that command. Please read the questions carefully.");
+				}
+				
 			// Quit the program and write to the Fridge.txt file
 			} else if (userRequest.equals("quit")) {
 				usingFridge = false;
 				fridge.updateFile();
+			} else {
+				System.out.println("Unable to understand that command. Please read the questions carefully.");
 			}
 		}
 	}

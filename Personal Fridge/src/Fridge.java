@@ -16,15 +16,15 @@ public class Fridge {
 		while(fridgeScanner.hasNextLine()) {
 			String info = fridgeScanner.nextLine();
 			String[] itemInfo = info.split(": ");
-			myFridge.add(new Item(itemInfo[0], Integer.parseInt(itemInfo[1])));
+			myFridge.add(new Item(itemInfo[1], Integer.parseInt(itemInfo[2]), itemInfo[0]));
 		}
 	}
 
-	public void addItem(String itemName, int quantity) {
+	public void addItem(String itemName, int quantity, String category) {
 		if (myFridge.contains(itemName)) {
 			getItemFromName(itemName).addToQuantity(quantity);
 		} else {
-			myFridge.add(new Item(itemName, quantity));
+			myFridge.add(new Item(itemName, quantity, category));
 		}
 		System.out.println("Added " + quantity + " " + itemName + " to your fridge.");
 	}
@@ -69,6 +69,29 @@ public class Fridge {
 		else {
 			return "Found " + item.quantity + " " + item.name + " in your fridge.";
 		}
+	}
+	
+	public String categorySearchToString(String category) {
+		ArrayList<Item> foodsFound = categorySearch(category);
+		String returnedStr = "";
+		if(foodsFound.isEmpty()) {
+			return "Nothing found in your fridge under the \"" + category + "\" category.";
+		}
+		for(Item item : foodsFound) {
+			returnedStr += item.quantity + " " + item.name + ", ";
+		}
+		// Return the string without the last comma and space after the last item
+		return returnedStr.substring(0, returnedStr.length() - 2);
+	}
+	
+	public ArrayList<Item> categorySearch(String requestedCategory) {
+		ArrayList<Item> returnedList = new ArrayList<Item>();
+		for(Item item : myFridge) {
+			if(item.category.equals(requestedCategory)) {
+				returnedList.add(item);
+			}
+		}
+		return returnedList;
 	}
 
 	public String review() {
@@ -136,7 +159,7 @@ public class Fridge {
 		PrintStream fridgeWriter = new PrintStream("Fridge.txt");
 		for(int item = 0; item < this.myFridge.size(); item++) {
 			Item fridgeItem = this.myFridge.get(item);
-			fridgeWriter.println(fridgeItem.name + ": " + fridgeItem.quantity);
+			fridgeWriter.println(fridgeItem.category + ": " + fridgeItem.name + ": " + fridgeItem.quantity);
 		}
 	}
 }
